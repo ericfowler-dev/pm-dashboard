@@ -968,7 +968,7 @@
             document.getElementById('totalCost').textContent = `$${(totalOMCost / 1000000).toFixed(1)}M`;
             
             // Show savings alert if significant (this remains active)
-            if (costSavings > 1000000) {
+            if (costSavings > 10000000000) {
                 document.getElementById('savingsAlert').classList.add('show');
                 document.getElementById('savingsAmount').textContent = `$${(costSavings / 1000000).toFixed(1)}M`;
                 document.getElementById('savingsDetails').textContent = 
@@ -977,16 +977,19 @@
                 document.getElementById('savingsAlert').classList.remove('show');
             }
             
-            // Update charts
+// Update charts
+            
+            // 1. Service Distribution Chart
             serviceChart.data.labels = serviceData.map(d => d.name);
             serviceChart.data.datasets[0].data = serviceData.map(d => d.value);
             serviceChart.update();
             
+            // 2. Annual Labor Hour Distribution Chart (Corresponds to laborChart)
             laborChart.data.labels = laborData.map(d => d.name);
             laborChart.data.datasets[0].data = laborData.map(d => Math.round(d.value));
             laborChart.update();
             
-            // Update staffing chart
+            // 3. Staffing Ramp-up Projection Chart (Corresponds to staffingChart)
             const months = Math.ceil(totalUnits / unitsPerMonth);
             const monthLabels = [];
             const techData = [];
@@ -1000,8 +1003,8 @@
             
             staffingChart.data.labels = monthLabels;
             staffingChart.data.datasets[0].data = techData;
-            staffingChart.update();
-        }
+            staffingChart.update(); // <-- This line is essential for the Staffing Chart
+        } // <-- The function closes here
         
         // Load preset scenarios
         function loadPreset(preset) {
@@ -1175,6 +1178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
