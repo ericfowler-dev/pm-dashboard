@@ -1122,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Specific catalyst toggle listener
     document.getElementById('catalyst-8760').addEventListener('change', toggleCatalyst);
     
-    // Preset buttons (FIXED: calculatePlan() added to all presets)
+    // Preset buttons (Ensure calculatePlan() is called after loading the preset)
     document.getElementById('preset-oem').addEventListener('click', function() {
         document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');
@@ -1137,6 +1137,9 @@ document.addEventListener('DOMContentLoaded', function() {
         calculatePlan();
     });
     
+    // The "aggressive" and "minimal" buttons are not visible in your HTML,
+    // but keep their logic here for completeness if you add them later.
+    /*
     document.getElementById('preset-aggressive').addEventListener('click', function() {
         document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');
@@ -1150,6 +1153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadPreset('minimal');
         calculatePlan();
     });
+    */
     
     // Input change listeners (Ensure the parts-8760 input does *not* fire calculatePlan directly)
     document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -1167,10 +1171,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial calculation (FIX: loadPreset sets values, then calculatePlan runs the math)
     loadPreset('oem'); 
     calculatePlan(); 
-});
+}); // <-- This is the final, essential closing brace for the DOMContentLoaded function.
     </script>
 </body>
 </html>
+
 
 
 
