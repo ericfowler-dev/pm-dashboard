@@ -304,33 +304,35 @@
             <div class="scenario-buttons">
                 <button class="scenario-btn active" id="preset-oem">OEM Intervals</button>
                 <button class="scenario-btn" id="preset-optimized">Optimized</button>
+                <button class="scenario-btn" id="preset-aggressive">Aggressive</button>
+                <button class="scenario-btn" id="preset-minimal">Minimal Service</button>
             </div>
         </div>
 
         <div class="control-panel">
             <div class="control-group">
                 <label for="totalUnits">Total Units in Fleet</label>
-                <input type="number" id="totalUnits" value="750" min="1">
+                <input type="number" id="totalUnits" value="750" min="1" onchange="calculatePlan()">
             </div>
             <div class="control-group">
                 <label for="unitsPerMonth">Units Added/Month</label>
-                <input type="number" id="unitsPerMonth" value="50" min="1">
+                <input type="number" id="unitsPerMonth" value="50" min="1" onchange="calculatePlan()">
             </div>
             <div class="control-group">
                 <label for="annualRuntime">Annual Runtime (Hours/Unit)</label>
-                <input type="number" id="annualRuntime" value="6500" min="100">
+                <input type="number" id="annualRuntime" value="6500" min="100" onchange="calculatePlan()">
             </div>
             <div class="control-group">
                 <label for="workingDays">Working Days/Year</label>
-                <input type="number" id="workingDays" value="300" min="1">
+                <input type="number" id="workingDays" value="300" min="1" onchange="calculatePlan()">
             </div>
             <div class="control-group">
                 <label for="hoursPerDay">Hours/Day</label>
-                <input type="number" id="hoursPerDay" value="10" min="1">
+                <input type="number" id="hoursPerDay" value="10" min="1" onchange="calculatePlan()">
             </div>
             <div class="control-group">
                 <label for="targetUtilization">Target Tech Utilization (%)</label>
-                <input type="number" id="targetUtilization" value="85" min="1" max="100">
+                <input type="number" id="targetUtilization" value="85" min="1" max="100" onchange="calculatePlan()">
             </div>
         </div>
         
@@ -369,11 +371,11 @@
                     </div>
                     <div class="service-control">
                         <label for="hours-initial">Labor (hrs)</label>
-                        <input type="number" id="hours-initial" value="9.9" step="0.1" min="0">
+                        <input type="number" id="hours-initial" value="9.9" step="0.1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="service-control">
                         <label for="parts-initial">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-initial" value="318" step="1" min="0">
+                        <input type="number" id="parts-initial" value="318" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-initial">0</strong></div>
@@ -415,7 +417,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-250">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-250" value="0" step="1" min="0">
+                        <input type="number" id="parts-250" value="0" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-250">0</strong></div>
@@ -440,7 +442,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-750">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-750" value="1328" step="1" min="0">
+                        <input type="number" id="parts-750" value="1328" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-750">0</strong></div>
@@ -465,7 +467,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-6500">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-6500" value="13251" step="1" min="0">
+                        <input type="number" id="parts-6500" value="13251" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-6500">0</strong></div>
@@ -494,7 +496,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-8760">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-8760" value="21908" step="1" min="0">
+                        <input type="number" id="parts-8760" value="21908" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-8760">0</strong></div>
@@ -519,7 +521,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-20000">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-20000" value="51359" step="1" min="0">
+                        <input type="number" id="parts-20000" value="51359" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-20000">0</strong></div>
@@ -544,7 +546,7 @@
                     </div>
                     <div class="service-control">
                         <label for="parts-40000">Parts Cost/Service ($)</label>
-                        <input type="number" id="parts-40000" value="116746" step="1" min="0">
+                        <input type="number" id="parts-40000" value="116746" step="1" min="0" onchange="calculatePlan()">
                     </div>
                     <div class="stats">
                         <div class="stat-item">Services/Yr: <strong id="stat-40000">0</strong></div>
@@ -624,18 +626,6 @@
             hours: 191822, 
             cost: 23141000 
         };
-        
-        // Service definitions
-        const serviceDefinitions = [
-            {id: 'initial', name: 'Initial 50hr', oneTime: true, defaultInterval: 50},
-            {id: 'daily', name: 'Daily Checks', automated: true, defaultInterval: 24},
-            {id: '250', name: '250 Hour', defaultInterval: 325},
-            {id: '750', name: '750 Hour', defaultInterval: 975},
-            {id: '6500', name: '6500 Hour', defaultInterval: 8450},
-            {id: '8760', name: 'Annual', defaultInterval: 8760},
-            {id: '20000', name: 'Top End', defaultInterval: 26000},
-            {id: '40000', name: 'Overhaul', defaultInterval: 52000}
-        ];
         // --- END CONFIGURATION ---
         
         // Toggles the 8760 parts cost based on the catalyst checkbox
@@ -650,74 +640,6 @@
             }
             // Recalculate the plan immediately after changing the parts cost
             calculatePlan();
-        }
-
-        // Toggle service interval and trigger recalculation
-        function toggleService(serviceId) {
-            const checkbox = document.getElementById(`enable-${serviceId}`);
-            const card = document.getElementById(`card-${serviceId}`);
-            const intervalInput = document.getElementById(`interval-${serviceId}`);
-            const hoursInput = document.getElementById(`hours-${serviceId}`);
-            const partsInput = document.getElementById(`parts-${serviceId}`); 
-            const catalystCheckbox = document.getElementById(`catalyst-${serviceId}`);
-            
-            if (checkbox) {
-                const isEnabled = checkbox.checked;
-                card.classList.toggle('disabled', !isEnabled);
-                
-                if (intervalInput) intervalInput.disabled = !isEnabled || serviceId === '8760';
-                if (hoursInput) hoursInput.disabled = !isEnabled || serviceId === 'daily';
-                if (partsInput) partsInput.disabled = !isEnabled || serviceId === 'daily'; 
-                if (catalystCheckbox) catalystCheckbox.disabled = !isEnabled;
-            }
-            
-            calculatePlan();
-        }
-        
-        // Load preset values for all inputs
-        function loadPreset(scenario) {
-            const presets = {
-                'oem': {
-                    'enable-initial': true, 'hours-initial': 9.9, 'parts-initial': 318,
-                    'enable-250': false, 'interval-250': 325, 'hours-250': 0.55, 'parts-250': 0,
-                    'enable-750': true, 'interval-750': 975, 'hours-750': 8.05, 'parts-750': 1328,
-                    'enable-6500': true, 'interval-6500': 8450, 'hours-6500': 22.5, 'parts-6500': 13251,
-                    'enable-8760': true, 'hours-8760': 10.0, 'parts-8760': BASE_8760_PARTS_COST, 'catalyst-8760': false,
-                    'enable-20000': false, 'interval-20000': 26000, 'hours-20000': 67.45, 'parts-20000': 51359,
-                    'enable-40000': false, 'interval-40000': 52000, 'hours-40000': 131, 'parts-40000': 116746,
-                    'totalUnits': 750, 'unitsPerMonth': 50, 'annualRuntime': 6500, 'workingDays': 300, 'hoursPerDay': 10, 'targetUtilization': 85
-                },
-                'optimized': {
-                    'enable-initial': true, 'hours-initial': 5.0, 'parts-initial': 318,
-                    'enable-250': true, 'interval-250': 500, 'hours-250': 0.55, 'parts-250': 0,
-                    'enable-750': true, 'interval-750': 1500, 'hours-750': 5.5, 'parts-750': 1328,
-                    'enable-6500': true, 'interval-6500': 10000, 'hours-6500': 18.0, 'parts-6500': 13251,
-                    'enable-8760': true, 'hours-8760': 5.0, 'parts-8760': NO_CATALYST_PARTS_COST, 'catalyst-8760': true,
-                    'enable-20000': true, 'interval-20000': 30000, 'hours-20000': 60.0, 'parts-20000': 51359,
-                    'enable-40000': true, 'interval-40000': 60000, 'hours-40000': 120.0, 'parts-40000': 116746,
-                    'totalUnits': 750, 'unitsPerMonth': 50, 'annualRuntime': 6500, 'workingDays': 300, 'hoursPerDay': 10, 'targetUtilization': 90
-                }
-            };
-            
-            const data = presets[scenario];
-            for (const id in data) {
-                const element = document.getElementById(id);
-                if (element) {
-                    if (element.type === 'checkbox') {
-                        element.checked = data[id];
-                        // Manually call specialized toggles
-                        if (id.startsWith('enable-')) {
-                            toggleService(id.replace('enable-', ''));
-                        } else if (id === 'catalyst-8760') {
-                            toggleCatalyst(); // This function already calls calculatePlan()
-                        }
-                    } else {
-                        element.value = data[id];
-                    }
-                }
-            }
-            // Ensure calculatePlan is called after setting all primary inputs, in case a toggle didn't run it.
-            calculatePlan(); 
         }
 
         // Initialize charts
@@ -778,9 +700,7 @@
                         data: [],
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        tension: 0.3,
-                        pointRadius: 4,
-                        fill: 'start'
+                        tension: 0.3
                     }]
                 },
                 options: {
@@ -788,221 +708,423 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            suggestedMax: 10, // A sensible starting max
-                            title: {
-                                display: true,
-                                text: 'Required Technicians (Rounded Up)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
+                            beginAtZero: true
                         }
                     }
                 }
             });
         }
         
-        // Calculate the service plan - THE CORE FUNCTION
+        // Toggle service interval
+        function toggleService(serviceId) {
+            const checkbox = document.getElementById(`enable-${serviceId}`);
+            const card = document.getElementById(`card-${serviceId}`);
+            const intervalInput = document.getElementById(`interval-${serviceId}`);
+            const hoursInput = document.getElementById(`hours-${serviceId}`);
+            const partsInput = document.getElementById(`parts-${serviceId}`); 
+            const catalystCheckbox = document.getElementById(`catalyst-${serviceId}`); // Specific to 8760
+            
+            if (checkbox) {
+                if (checkbox.checked) {
+                    card.classList.remove('disabled');
+                    if (serviceId !== 'initial' && serviceId !== '8760' && serviceId !== 'daily' && intervalInput) {
+                        intervalInput.disabled = false;
+                    }
+                    if (serviceId !== 'daily' && hoursInput) {
+                        hoursInput.disabled = false;
+                    }
+                    if (serviceId !== 'daily' && partsInput) { 
+                        partsInput.disabled = false;
+                    }
+                    if (catalystCheckbox) {
+                        catalystCheckbox.disabled = false;
+                    }
+                } else {
+                    card.classList.add('disabled');
+                    if (intervalInput) intervalInput.disabled = true;
+                    if (hoursInput) hoursInput.disabled = true;
+                    if (partsInput) partsInput.disabled = true; 
+                    if (catalystCheckbox) {
+                        catalystCheckbox.disabled = true;
+                    }
+                }
+            }
+        }
+        
+        // Calculate the service plan
         function calculatePlan() {
-            const totalUnits = parseInt(document.getElementById('totalUnits').value) || 0;
-            const unitsPerMonth = parseInt(document.getElementById('unitsPerMonth').value) || 0;
-            const annualRuntime = parseInt(document.getElementById('annualRuntime').value) || 0;
-            const workingDays = parseInt(document.getElementById('workingDays').value) || 0;
-            const hoursPerDay = parseInt(document.getElementById('hoursPerDay').value) || 0;
-            const utilization = (parseInt(document.getElementById('targetUtilization').value) || 0) / 100;
+            const totalUnits = parseInt(document.getElementById('totalUnits').value);
+            const unitsPerMonth = parseInt(document.getElementById('unitsPerMonth').value);
+            const annualRuntime = parseInt(document.getElementById('annualRuntime').value);
+            const workingDays = parseInt(document.getElementById('workingDays').value);
+            const hoursPerDay = parseInt(document.getElementById('hoursPerDay').value);
+            const utilization = parseInt(document.getElementById('targetUtilization').value) / 100;
             
             let totalServices = 0;
             let totalLaborHours = 0;
             let totalPartsCost = 0; 
             const serviceData = [];
             const laborData = [];
+            
+            // Calculate for each service interval
+            const services = [
+                {id: 'initial', name: 'Initial 50hr', oneTime: true},
+                {id: 'daily', name: 'Daily Checks', automated: true, interval: 24},
+                {id: '250', name: '250 Hour'},
+                {id: '750', name: '750 Hour'},
+                {id: '6500', name: '6500 Hour'},
+                {id: '8760', name: 'Annual', interval: 8760},
+                {id: '20000', name: 'Top End'},
+                {id: '40000', name: 'Overhaul'}
+            ];
+            
             let tableHTML = '';
 
-            // 1. Calculate all metrics
-            serviceDefinitions.forEach(service => {
-                const enableCheckbox = document.getElementById(`enable-${service.id}`);
-                const isEnabled = service.automated || service.oneTime || (enableCheckbox && enableCheckbox.checked);
-
-                if (!isEnabled && !service.oneTime) {
-                    // Update stats to 0 for disabled services
-                    document.getElementById(`stat-${service.id}`).textContent = 0;
-                    document.getElementById(`stat-${service.id}-hours`).textContent = 0;
-                    document.getElementById(`stat-${service.id}-parts`).textContent = 0;
-                    
-                    // Add disabled row to table
-                    tableHTML += `<tr class="disabled"><td>${service.name}</td><td>Disabled</td><td>-</td><td>0</td><td>-</td><td>0</td><td>-</td><td>$0</td><td>0%</td></tr>`;
-                    return; // Skip calculations for disabled services (except initial)
-                }
-
-                // Get dynamic values
-                const intervalInput = document.getElementById(`interval-${service.id}`);
-                const hoursInput = document.getElementById(`hours-${service.id}`);
-                const partsInput = document.getElementById(`parts-${service.id}`);
-
-                const interval = (intervalInput && !intervalInput.disabled) ? parseInt(intervalInput.value) : (service.defaultInterval || 0);
-                const laborHoursPerService = (hoursInput && !hoursInput.disabled) ? parseFloat(hoursInput.value) : 0;
-                const partsCostPerService = (partsInput && !partsInput.disabled) ? parseFloat(partsInput.value) : 0;
-                
-                let annualServices;
-
-                if (service.oneTime) {
-                    // Initial service is only done once per unit, regardless of runtime
-                    annualServices = totalUnits; 
-                } else if (service.automated) {
-                    // Daily checks are always considered 365 per unit
-                    annualServices = totalUnits * (365 / (interval/24)); 
-                } else if (interval > 0) {
-                    // Standard interval service
-                    annualServices = Math.floor(annualRuntime / interval) * totalUnits;
+            // Calculate total labor hours for percentage calculation first
+            const totalLaborForPercentage = services.reduce((acc, curr) => {
+                const hrs = document.getElementById(`hours-${curr.id}`) ? parseFloat(document.getElementById(`hours-${curr.id}`).value) : 0;
+                let interval;
+                if (curr.automated || curr.oneTime || curr.id === '8760') {
+                    interval = curr.interval || (curr.id === '8760' ? 8760 : 0);
                 } else {
-                    annualServices = 0;
+                    interval = document.getElementById(`interval-${curr.id}`) ? parseInt(document.getElementById(`interval-${curr.id}`).value) : 0;
                 }
-                
-                const totalLabor = annualServices * laborHoursPerService;
-                const totalParts = annualServices * partsCostPerService;
+                const enabled = document.getElementById(`enable-${curr.id}`) ? document.getElementById(`enable-${curr.id}`).checked : false;
 
-                // Accumulate totals
-                totalServices += annualServices;
-                totalLaborHours += totalLabor;
-                totalPartsCost += totalParts;
-
-                // Update service card stats
-                document.getElementById(`stat-${service.id}`).textContent = annualServices.toLocaleString();
-                document.getElementById(`stat-${service.id}-hours`).textContent = Math.round(totalLabor).toLocaleString();
-                document.getElementById(`stat-${service.id}-parts`).textContent = `$${Math.round(totalParts).toLocaleString()}`;
-                
-                // Add data for charts
-                if (annualServices > 0) {
-                    serviceData.push({name: service.name, value: annualServices});
-                    if (totalLabor > 0) {
-                        laborData.push({name: service.name, value: totalLabor});
+                if (enabled && !curr.automated) {
+                    if (curr.oneTime) {
+                        return acc + (totalUnits * hrs) / 3;
+                    } else if (curr.id === '8760') {
+                        return acc + (totalUnits * hrs);
+                    } else if (interval > 0) {
+                        return acc + (totalUnits * annualRuntime / interval) * hrs;
                     }
                 }
-            });
-
-            // 2. Finalize Metrics
-            const totalAvailableHours = workingDays * hoursPerDay * utilization;
-            const techsRequired = Math.ceil(totalLaborHours / totalAvailableHours) || 0;
-            const totalOMCost = (totalLaborHours * LABOR_RATE_PER_HOUR) + totalPartsCost;
-            const finalCost = totalOMCost * (1 + GENERAL_OVERHEAD_PERCENT);
-
-            // Calculate total Labor Per Unit for Staffing Ramp-up
-            const totalLaborPerUnit = (totalLaborHours / totalUnits) || 0;
+                return acc;
+            }, 0);
             
-            // 3. Update Summary Table with percentages and totals
-            serviceDefinitions.forEach(service => {
-                const isEnabled = document.getElementById(`enable-${service.id}`) ? document.getElementById(`enable-${service.id}`).checked : !service.automated;
-                if (!isEnabled && !service.oneTime) return;
-
-                const intervalInput = document.getElementById(`interval-${service.id}`);
-                const hoursInput = document.getElementById(`hours-${service.id}`);
-                const partsInput = document.getElementById(`parts-${service.id}`);
+            
+            services.forEach(service => {
+                const enabled = document.getElementById(`enable-${service.id}`) ? document.getElementById(`enable-${service.id}`).checked : false;
                 
-                const interval = (intervalInput && !intervalInput.disabled) ? parseInt(intervalInput.value) : (service.defaultInterval || 0);
-                const laborHoursPerService = (hoursInput && !hoursInput.disabled) ? parseFloat(hoursInput.value) : 0;
-                const partsCostPerService = (partsInput && !partsInput.disabled) ? parseFloat(partsInput.value) : 0;
-                const annualServices = parseFloat(document.getElementById(`stat-${service.id}`).textContent.replace(/,/g, ''));
-                const totalLabor = annualServices * laborHoursPerService;
-                const totalParts = annualServices * partsCostPerService;
-                
-                const laborPercent = totalLaborHours > 0 ? (totalLabor / totalLaborHours) * 100 : 0;
+                let servicesPerYear = 0;
+                let hoursPerYear = 0;
+                let partsPerYear = 0; 
+                let interval;
 
-                tableHTML += `
-                    <tr>
-                        <td>${service.name}</td>
-                        <td>${isEnabled ? 'Enabled' : (service.automated ? 'Auto' : 'Disabled')}</td>
-                        <td>${interval > 0 ? interval.toLocaleString() : '-'}</td>
-                        <td>${annualServices.toLocaleString()}</td>
-                        <td>${laborHoursPerService.toFixed(2)}</td>
-                        <td>${Math.round(totalLabor).toLocaleString()}</td>
-                        <td>$${Math.round(partsCostPerService).toLocaleString()}</td>
-                        <td>$${Math.round(totalParts).toLocaleString()}</td>
-                        <td>${laborPercent.toFixed(1)}%</td>
-                    </tr>
-                `;
+                if (service.automated || service.oneTime || service.id === '8760') {
+                    interval = service.interval || (service.id === '8760' ? 8760 : 0);
+                } else {
+                    interval = document.getElementById(`interval-${service.id}`) ? parseInt(document.getElementById(`interval-${service.id}`).value) : 0;
+                }
+                
+                let laborHours = document.getElementById(`hours-${service.id}`) ? parseFloat(document.getElementById(`hours-${service.id}`).value) : 0;
+                
+                const partsInputElement = document.getElementById(`parts-${service.id}`);
+                // Use Math.round() when reading the value to ensure integer arithmetic
+                let partsCostPerService = partsInputElement ? Math.round(parseFloat(partsInputElement.value)) : 0;
+                
+                // --- CALCULATION LOGIC ---
+                if (service.automated) {
+                    servicesPerYear = Math.round(totalUnits * annualRuntime / (interval || 24)); 
+                    hoursPerYear = 0; 
+                    partsPerYear = 0;
+                } else if (enabled) {
+                    
+                    if (service.oneTime) {
+                        servicesPerYear = totalUnits; 
+                        hoursPerYear = (totalUnits * laborHours) / 3; 
+                        partsPerYear = (totalUnits * partsCostPerService) / 3; 
+                        totalPartsCost += partsPerYear; 
+                    } else if (service.id === '8760') {
+                        servicesPerYear = totalUnits;
+                        hoursPerYear = totalUnits * laborHours;
+                        partsPerYear = totalUnits * partsCostPerService; 
+                        totalPartsCost += partsPerYear;
+                    } 
+                    else if (interval > 0) {
+                        servicesPerYear = Math.round(totalUnits * annualRuntime / interval);
+                        hoursPerYear = servicesPerYear * laborHours;
+                        partsPerYear = servicesPerYear * partsCostPerService; 
+                        totalPartsCost += partsPerYear; 
+                    }
+                    
+                    if (!service.oneTime && !service.automated) {
+                       totalServices += servicesPerYear;
+                    }
+                    
+                    if (!service.automated) {
+                        totalLaborHours += hoursPerYear;
+                        serviceData.push({name: service.name, value: service.oneTime ? servicesPerYear / 3 : servicesPerYear});
+                        laborData.push({name: service.name, value: hoursPerYear});
+                    }
+                }
+                // --- END CALCULATION LOGIC ---
+                
+                
+                // --- UPDATE STATS (SERVICE CARDS) ---
+                const displayServicesPerYear = service.oneTime ? totalUnits : servicesPerYear;
+
+                const statElement = document.getElementById(`stat-${service.id}`);
+                if (statElement) {
+                    statElement.textContent = displayServicesPerYear.toLocaleString();
+                }
+                const hoursElement = document.getElementById(`stat-${service.id}-hours`);
+                if (hoursElement) {
+                    hoursElement.textContent = Math.round(hoursPerYear).toLocaleString();
+                }
+                const partsStatElement = document.getElementById(`stat-${service.id}-parts`); 
+                if (partsStatElement) {
+                    partsStatElement.textContent = Math.round(partsPerYear).toLocaleString();
+                }
+
+                
+                // --- UPDATE TABLE HTML ---
+                if (service.automated) {
+                    tableHTML += `
+                        <tr class="disabled">
+                            <td>${service.name}</td>
+                            <td>🤖 Automated</td>
+                            <td>${interval || 24}</td>
+                            <td>${servicesPerYear.toLocaleString()}</td>
+                            <td>${laborHours.toFixed(2)}</td>
+                            <td>0</td>
+                            <td>$0</td>
+                            <td>$0</td>
+                            <td>0.0%</td>
+                        </tr>
+                    `;
+                } else if (enabled) {
+                    const percentage = totalLaborForPercentage > 0 ? (hoursPerYear / totalLaborForPercentage * 100).toFixed(1) : '0.0';
+                    const intervalDisplay = service.oneTime ? 'Once/Unit (Spread 3Y)' : (service.id === '8760' ? 'Annual (8760)' : interval.toLocaleString());
+                    const servicesPerYearDisplay = service.oneTime ? totalUnits : servicesPerYear; 
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>${service.name}</td>
+                            <td>✅ Active</td>
+                            <td>${intervalDisplay}</td>
+                            <td>${servicesPerYearDisplay.toLocaleString()}</td> <td>${laborHours.toFixed(2)}</td>
+                            <td>${Math.round(hoursPerYear).toLocaleString()}</td>
+                            <td>$${partsCostPerService.toLocaleString()}</td> 
+                            <td>$${Math.round(partsPerYear).toLocaleString()}</td> 
+                            <td>${percentage}%</td>
+                        </tr>
+                    `;
+                } else {
+                    tableHTML += `
+                        <tr class="disabled">
+                            <td>${service.name}</td>
+                            <td>❌ Disabled</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    `;
+                }
             });
             
             // Add total row
             tableHTML += `
                 <tr class="total-row">
-                    <td>TOTALS</td>
-                    <td></td>
-                    <td></td>
-                    <td>${totalServices.toLocaleString()}</td>
-                    <td></td>
-                    <td>${Math.round(totalLaborHours).toLocaleString()}</td>
-                    <td></td>
-                    <td>$${Math.round(totalPartsCost).toLocaleString()}</td>
-                    <td>100.0%</td>
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>-</strong></td>
+                    <td><strong>-</strong></td>
+                    <td><strong>${totalServices.toLocaleString()}</strong></td>
+                    <td><strong>-</strong></td>
+                    <td><strong>${Math.round(totalLaborHours).toLocaleString()}</strong></td>
+                    <td><strong>-</strong></td>
+                    <td><strong>$${Math.round(totalPartsCost).toLocaleString()}</strong></td>
+                    <td><strong>100%</strong></td>
                 </tr>
             `;
-
+            
             document.getElementById('summaryTableBody').innerHTML = tableHTML;
             
-            // 4. Update Metric Cards
-            document.getElementById('techsRequired').textContent = techsRequired.toLocaleString();
+            // Calculate technicians
+            const availableHours = workingDays * hoursPerDay * utilization;
+            const techsRequired = Math.ceil(totalLaborHours / availableHours * 1.15); // 15% contingency
+            
+            // Calculate costs
+            const laborCost = totalLaborHours * LABOR_RATE_PER_HOUR;
+            const totalOMCost = (laborCost + totalPartsCost) * (1 + GENERAL_OVERHEAD_PERCENT);
+            
+            // Calculate savings (still used for the alert box)
+            const baselineLaborCost = baselineData.hours * LABOR_RATE_PER_HOUR;
+            const baselineGrossCost = baselineData.cost / (1 + GENERAL_OVERHEAD_PERCENT);
+            const baselinePartsCost = baselineGrossCost - baselineLaborCost; 
+            
+            const techSavings = baselineData.techs - techsRequired;
+            const hoursSavings = baselineData.hours - totalLaborHours;
+            const partsSavings = baselinePartsCost - totalPartsCost; 
+            const costSavings = baselineData.cost - totalOMCost;
+            
+            // Update metrics
+            document.getElementById('techsRequired').textContent = techsRequired;
             document.getElementById('annualServices').textContent = totalServices.toLocaleString();
             document.getElementById('totalHours').textContent = Math.round(totalLaborHours).toLocaleString();
-            document.getElementById('totalCost').textContent = `$${(finalCost / 1000000).toFixed(2)}M`;
-
-            // 5. Update Charts
+            document.getElementById('totalCost').textContent = `$${(totalOMCost / 1000000).toFixed(1)}M`;
             
-            // Service Chart (Doughnut)
+            // Show savings alert if significant (this remains active)
+            if (costSavings > 1000000) {
+                document.getElementById('savingsAlert').classList.add('show');
+                document.getElementById('savingsAmount').textContent = `$${(costSavings / 1000000).toFixed(1)}M`;
+                document.getElementById('savingsDetails').textContent = 
+                    `${techSavings} fewer technicians | ${Math.round(hoursSavings).toLocaleString()} fewer labor hours | $${(partsSavings / 1000).toFixed(0)}K parts savings`;
+            } else {
+                document.getElementById('savingsAlert').classList.remove('show');
+            }
+            
+            // Update charts
             serviceChart.data.labels = serviceData.map(d => d.name);
             serviceChart.data.datasets[0].data = serviceData.map(d => d.value);
             serviceChart.update();
             
-            // Labor Chart (Bar)
             laborChart.data.labels = laborData.map(d => d.name);
             laborChart.data.datasets[0].data = laborData.map(d => Math.round(d.value));
             laborChart.update();
             
-            // Staffing Chart (Line)
-            const maxMonths = 24; // Max months to show on the ramp-up
-            const monthsToFullFleet = unitsPerMonth > 0 ? Math.ceil(totalUnits / unitsPerMonth) : 0;
-            const monthsToShow = Math.min(maxMonths, monthsToFullFleet + 6); // Show up to maxMonths or 6 months past full fleet
-            
+            // Update staffing chart
+            const months = Math.ceil(totalUnits / unitsPerMonth);
             const monthLabels = [];
             const techData = [];
             
-            const availableHoursPerTech = workingDays * hoursPerDay * utilization;
-
-            for (let i = 1; i <= monthsToShow; i++) {
+            for (let i = 1; i <= Math.min(24, months + 6); i++) {
                 monthLabels.push(`Month ${i}`);
-                
-                // Calculate units active up to the current month
                 const unitsActive = Math.min(totalUnits, unitsPerMonth * i);
-                
-                // Calculate the proportional labor hours required for the currently active units
-                const proportionalLabor = unitsActive * totalLaborPerUnit;
-                
-                // Calculate required techs based on proportional labor
-                const requiredTechs = Math.ceil(proportionalLabor / availableHoursPerTech) || 0;
-                
-                techData.push(requiredTechs);
+                const proportionalTechs = Math.ceil((unitsActive / totalUnits) * techsRequired);
+                techData.push(proportionalTechs);
             }
             
             staffingChart.data.labels = monthLabels;
             staffingChart.data.datasets[0].data = techData;
-            staffingChart.options.scales.y.suggestedMax = Math.max(10, Math.ceil(techsRequired * 1.1));
             staffingChart.update();
         }
+        
+        // Load preset scenarios
+        function loadPreset(preset) {
+            const intervals = {
+                oem: {
+                    '250': 250, '750': 750, '6500': 6500, '20000': 20000, '40000': 40000
+                },
+                optimized: {
+                    '250': 325, '750': 1500, '6500': 12000, '20000': 26000, '40000': 52000
+                },
+                aggressive: {
+                    '250': 375, '750': 4000, '6500': 15000, '20000': 30000, '40000': 60000
+                },
+                minimal: {
+                    '250': 325, '750': 5000, '6500': 20000, '20000': 40000, '40000': 80000
+                }
+            }[preset];
+            
+            if (intervals) {
+                // 1. Apply intervals first
+                Object.keys(intervals).forEach(key => {
+                    const inputElement = document.getElementById(`interval-${key}`);
+                    if (inputElement) {
+                        inputElement.value = intervals[key];
+                    }
+                });
+                
+                // 2. Set Labor Hours based on preset
+                if (preset === 'optimized') {
+                    // Optimized Labor Hours
+                    document.getElementById('hours-initial').value = 6.0;
+                    document.getElementById('hours-750').value = 7.5;
+                    document.getElementById('hours-6500').value = 18.0;
+                    document.getElementById('hours-8760').value = 8.0;
+                } else if (preset === 'aggressive') {
+                    // Aggressive Labor Hours (currently using OEM values for separation)
+                    document.getElementById('hours-initial').value = 9.9;
+                    document.getElementById('hours-750').value = 8.05;
+                    document.getElementById('hours-6500').value = 22.5;
+                    document.getElementById('hours-8760').value = 10.0;
+                } else {
+                    // OEM and Minimal default to OEM labor hours
+                    document.getElementById('hours-initial').value = 9.9;
+                    document.getElementById('hours-750').value = 8.05;
+                    document.getElementById('hours-6500').value = 22.5;
+                    document.getElementById('hours-8760').value = 10.0;
+                }
+                
+                // 3. Handle enabling/disabling based on preset
+                const enableInitial = document.getElementById('enable-initial');
+                const enable250 = document.getElementById('enable-250');
+                const enable750 = document.getElementById('enable-750');
+                const enable6500 = document.getElementById('enable-6500');
+                const enable8760 = document.getElementById('enable-8760');
+                const enable20000 = document.getElementById('enable-20000');
+                const enable40000 = document.getElementById('enable-40000');
+                
+                const catalystCheckbox = document.getElementById('catalyst-8760');
 
-        // Event Listeners for Initial Setup
+                // Reset catalyst checkbox to unchecked (full cost) on preset load
+                if (catalystCheckbox) {
+                    catalystCheckbox.checked = false;
+                }
+
+                if (preset === 'minimal') {
+                    if (enableInitial) enableInitial.checked = false;
+                    if (enable250) enable250.checked = false; 
+                    if (enable750) enable750.checked = true;
+                    if (enable6500) enable6500.checked = false;
+                    if (enable8760) enable8760.checked = true;
+                    if (enable20000) enable20000.checked = false;
+                    if (enable40000) enable40000.checked = false;
+                } else if (preset === 'optimized') {
+                    // Optimized preset logic: disable 20K and 40K
+                    if (enableInitial) enableInitial.checked = true;
+                    if (enable250) enable250.checked = false; 
+                    if (enable750) enable750.checked = true;
+                    if (enable6500) enable6500.checked = true;
+                    if (enable8760) enable8760.checked = true;
+                    if (enable20000) enable20000.checked = false; // DISABLED
+                    if (enable40000) enable40000.checked = false; // DISABLED
+                } else {
+                    // OEM (default) and Aggressive
+                    if (enableInitial) enableInitial.checked = true;
+                    if (enable250) enable250.checked = false; // Default off
+                    if (enable750) enable750.checked = true;
+                    if (enable6500) enable6500.checked = true;
+                    if (enable8760) enable8760.checked = true;
+                    if (enable20000) enable20000.checked = true; // Enabled
+                    if (enable40000) enable40000.checked = true; // Enabled
+                }
+                
+                // Update all service cards 
+                ['initial', 'daily', '250', '750', '6500', '8760', '20000', '40000'].forEach(id => {
+                    toggleService(id);
+                });
+
+                // Crucially, call toggleCatalyst *after* setting the check state and enabling/disabling the input
+                toggleCatalyst(); 
+            }
+        }
+        
+        // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             initCharts();
             
-            // Add listeners to all relevant input fields (exclude those handled by specialized functions like toggleService)
-            document.querySelectorAll('input[type="number"], input[type="checkbox"]').forEach(input => {
-                if (!input.id.startsWith('enable-') && input.id !== 'catalyst-8760') {
-                    input.addEventListener('change', calculatePlan);
+            // Service toggle listeners
+            ['initial', 'daily', '250', '750', '6500', '8760', '20000', '40000'].forEach(id => {
+                const checkbox = document.getElementById(`enable-${id}`);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        toggleService(id);
+                        calculatePlan();
+                    });
                 }
             });
+
+            // Specific catalyst toggle listener
+            document.getElementById('catalyst-8760').addEventListener('change', toggleCatalyst);
             
-            // Preset buttons event listeners
+            // Preset buttons
             document.getElementById('preset-oem').addEventListener('click', function() {
                 document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
@@ -1014,8 +1136,32 @@
                 this.classList.add('active');
                 loadPreset('optimized');
             });
+            
+            document.getElementById('preset-aggressive').addEventListener('click', function() {
+                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                loadPreset('aggressive');
+            });
+            
+            document.getElementById('preset-minimal').addEventListener('click', function() {
+                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                loadPreset('minimal');
+            });
+            
+            // Input change listeners (Ensure the parts-8760 input does *not* fire calculatePlan directly)
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                if (input.id !== 'parts-8760') {
+                    input.addEventListener('change', calculatePlan);
+                }
+            });
+            // The parts-8760 input needs to listen for changes *not* caused by the catalyst toggle
+            document.getElementById('parts-8760').addEventListener('change', function() {
+                // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
+                calculatePlan();
+            });
 
-            // Initial calculation: load default preset and calculate
+            // Initial calculation
             loadPreset('oem'); 
         });
     </script>
