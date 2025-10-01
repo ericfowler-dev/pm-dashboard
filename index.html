@@ -1036,13 +1036,14 @@
                     if (enable20000) enable20000.checked = false;
                     if (enable40000) enable40000.checked = false;
                 } else {
+                    // OEM and Aggressive presets
                     if (enableInitial) enableInitial.checked = true;
                     if (enable250) enable250.checked = false;
                     if (enable750) enable750.checked = true;
                     if (enable6500) enable6500.checked = true;
                     if (enable8760) enable8760.checked = true;
-                    if (enable20000) enable20000.checked = true;
-                    if (enable40000) enable40000.checked = true;
+                    if (enable20000) enable20000.checked = false;
+                    if (enable40000) enable40000.checked = false;
                 }
                 
                 ['initial', 'daily', '250', '750', '6500', '8760', '20000', '40000'].forEach(id => {
