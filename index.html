@@ -1104,79 +1104,73 @@
             }
         }
         
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            initCharts();
-            
-            // Service toggle listeners
-            ['initial', 'daily', '250', '750', '6500', '8760', '20000', '40000'].forEach(id => {
-                const checkbox = document.getElementById(`enable-${id}`);
-                if (checkbox) {
-                    checkbox.addEventListener('change', function() {
-                        toggleService(id);
-                        calculatePlan();
-                    });
-                }
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+    
+    // Service toggle listeners
+    ['initial', 'daily', '250', '750', '6500', '8760', '20000', '40000'].forEach(id => {
+        const checkbox = document.getElementById(`enable-${id}`);
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                toggleService(id);
+                calculatePlan();
             });
+        }
+    });
 
-            // Specific catalyst toggle listener
-            document.getElementById('catalyst-8760').addEventListener('change', toggleCatalyst);
-            
-            // Preset buttons
-            document.getElementById('preset-oem').addEventListener('click', function() {
-                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                loadPreset('oem');
-                calculatePlan();
-            });
-            
-            document.getElementById('preset-optimized').addEventListener('click', function() {
-                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                loadPreset('optimized');
-            });
-            
-            document.getElementById('preset-aggressive').addEventListener('click', function() {
-                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                loadPreset('aggressive');
-            });
-            
-            document.getElementById('preset-minimal').addEventListener('click', function() {
-                document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                loadPreset('minimal');
-            });
-            
-            // Input change listeners (Ensure the parts-8760 input does *not* fire calculatePlan directly)
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                if (input.id !== 'parts-8760') {
-                    input.addEventListener('change', calculatePlan);
-                }
-            });
-            // The parts-8760 input needs to listen for changes *not* caused by the catalyst toggle
-            document.getElementById('parts-8760').addEventListener('change', function() {
-                // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
-                calculatePlan();
-            });
-            // <--- LOAD THE CODE BLOCK HERE --->
-            // The parts-8760 input needs to listen for changes *not* caused by the catalyst toggle
-            document.getElementById('parts-8760').addEventListener('change', function() {
-                // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
-                calculatePlan();
-            });
+    // Specific catalyst toggle listener
+    document.getElementById('catalyst-8760').addEventListener('change', toggleCatalyst);
+    
+    // Preset buttons (FIXED: calculatePlan() added to all presets)
+    document.getElementById('preset-oem').addEventListener('click', function() {
+        document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        loadPreset('oem');
+        calculatePlan();
+    });
+    
+    document.getElementById('preset-optimized').addEventListener('click', function() {
+        document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        loadPreset('optimized');
+        calculatePlan();
+    });
+    
+    document.getElementById('preset-aggressive').addEventListener('click', function() {
+        document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        loadPreset('aggressive');
+        calculatePlan();
+    });
+    
+    document.getElementById('preset-minimal').addEventListener('click', function() {
+        document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        loadPreset('minimal');
+        calculatePlan();
+    });
+    
+    // Input change listeners (Ensure the parts-8760 input does *not* fire calculatePlan directly)
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        if (input.id !== 'parts-8760') {
+            input.addEventListener('change', calculatePlan);
+        }
+    });
+    
+    // The parts-8760 input needs to listen for changes *not* caused by the catalyst toggle
+    document.getElementById('parts-8760').addEventListener('change', function() {
+        // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
+        calculatePlan();
+    });
 
-            // Initial calculation
-            loadPreset('oem'); 
-            
-            // **FIX: Call calculatePlan() immediately after loading the preset**
-            calculatePlan(); 
-        });
-            // Initial calculation
-            loadPreset('oem'); 
-        });
+    // Initial calculation (FIX: loadPreset sets values, then calculatePlan runs the math)
+    loadPreset('oem'); 
+    calculatePlan(); 
+});
     </script>
 </body>
 </html>
+
 
 
