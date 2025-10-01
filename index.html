@@ -1127,6 +1127,7 @@
                 document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
                 loadPreset('oem');
+                calculatePlan();
             });
             
             document.getElementById('preset-optimized').addEventListener('click', function() {
@@ -1158,11 +1159,24 @@
                 // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
                 calculatePlan();
             });
+            // <--- LOAD THE CODE BLOCK HERE --->
+            // The parts-8760 input needs to listen for changes *not* caused by the catalyst toggle
+            document.getElementById('parts-8760').addEventListener('change', function() {
+                // If a user manually changes the number, we recalculate, but we *don't* change the checkbox state.
+                calculatePlan();
+            });
 
+            // Initial calculation
+            loadPreset('oem'); 
+            
+            // **FIX: Call calculatePlan() immediately after loading the preset**
+            calculatePlan(); 
+        });
             // Initial calculation
             loadPreset('oem'); 
         });
     </script>
 </body>
 </html>
+
 
